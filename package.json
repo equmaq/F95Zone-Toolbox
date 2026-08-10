@@ -1,7 +1,7 @@
 {
   "name": "f95zone-toolbox",
   "version": "1.0.0",
-  "description": "Repository template for F95Zone userscripts.",
+  "description": "A collection of js-modules for F95Zone that can be individually toggled by the user.",
   "scripts": {
     "test": "node --check src/main.user.js"
   },
@@ -10,6 +10,6 @@
     "url": "http://localhost:26831/equmaq/F95Zone-Toolbox"
   },
   "keywords": [],
-  "author": "",
+  "author": "equmaq",
   "license": "GPL-3.0"
 }
