@@ -5,7 +5,7 @@
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @namespace    https://github.com/equmaq/F95Zone-Toolbox
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
-// @version      1.4.1
+// @version      1.4.2
 // @license      GPL-3.0
 // @match        https://f95zone.to/*
 // @grant        GM_getValue
