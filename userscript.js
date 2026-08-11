@@ -14,6 +14,8 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.registerMenuCommand
+// @downloadURL https://update.sleazyfork.org/scripts/590793/F95Zone%20Toolbox.user.js
+// @updateURL https://update.sleazyfork.org/scripts/590793/F95Zone%20Toolbox.user.js
 // ==/UserScript==
 
 (function init() {
