@@ -9,3 +9,7 @@ Instant Ignore Button
 Current Style Modules:
 Highlight Unignore And Unwatch Buttons
 Highlight Watched Threads On Latest Updates Page
+
+## Installation
+
+https://sleazyfork.org/en/scripts/590793-f95zone-toolbox
