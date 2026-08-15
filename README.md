@@ -13,3 +13,9 @@ Highlight Watched Threads On Latest Updates Page
 ## Installation
 
 https://sleazyfork.org/en/scripts/590793-f95zone-toolbox
+
+---
+
+## AI usage disclosure
+
+- AI powered IntelliSense/inline suggestions were occasionally used (GitHub Copilot)
