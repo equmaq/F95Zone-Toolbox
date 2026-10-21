@@ -5,7 +5,7 @@
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @namespace    https://github.com/equmaq/F95Zone-Toolbox
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
-// @version      1.4.2
+// @version      1.4.3
 // @license      GPL-3.0
 // @match        https://f95zone.to/*
 // @grant        GM_getValue
@@ -43,7 +43,7 @@
           return;
         }
 
-        const regex = /^\s*\+?\s*\d+\s*$/;
+        const regex = /^[+﹢]?\d+$/;
 
         function clean() {
           document.querySelectorAll('.message').forEach(post => {
@@ -72,8 +72,8 @@
       enabledByDefault: false,
       run({ document }) {
         document.addEventListener('click', event => {
-          const button = event.target?.closest?.('a.tic--button');
-          if (!button || button.textContent.trim() !== 'Ignore thread') return;
+          const button = event.target?.closest?.('a.tic-button');
+          if (button?.textContent?.trim() !== 'Ignore thread') return;
 
           event.preventDefault();
 
@@ -122,7 +122,7 @@
         };
 
         const applyStyles = () => {
-          document.querySelectorAll('a.tic--button, a.button--link').forEach(element => {
+          document.querySelectorAll('a.tic-button, a.button--link').forEach(element => {
             const text = element.textContent.trim();
 
             clearStyles(element);
