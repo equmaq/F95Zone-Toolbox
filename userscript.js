@@ -31,6 +31,7 @@
   const CURRENT_VERSION = GM_info.script.version;
 
   const isThreadPage = /\/threads\//.test(location.pathname);
+  const isDownloadPage = /\/dl\//.test(location.pathname);
   const modules = [
     {
       key: 'plusOneEnabled',
@@ -98,6 +99,36 @@
           document.body.appendChild(form);
           form.submit();
         });
+      },
+    },
+    {
+      key: 'maskedLinkSkipperEnabled',
+      type: 'function',
+      title: 'Masked Link Skipper',
+      description: 'Automatically presses the "continue to" button when trying to download a game.',
+      enabledByDefault: false,
+      run({ document, isDownloadPage }) {
+        if (isDownloadPage === false) {
+          return;
+        }
+
+        const submittedForms = new WeakSet();
+
+        const submitForms = () => {
+          document.querySelectorAll('form.f95dl-box').forEach(form => {
+            if (submittedForms.has(form)) {
+              return;
+            }
+
+            submittedForms.add(form);
+            form.submit();
+          });
+        };
+
+        submitForms();
+
+        const observer = new MutationObserver(submitForms);
+        observer.observe(document.body, { childList: true, subtree: true });
       },
     },
     {
