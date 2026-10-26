@@ -3,12 +3,14 @@
 A collection of js-modules for F95Zone that can be individually toggled by the user.
 
 Current function modules:
-Instant Ignore Button
-+1 Reply Blocker
+- Instant Ignore Button
+- +1 Reply Blocker
+- Masked Link Skipper
 
 Current Style Modules:
-Highlight Unignore And Unwatch Buttons
-Highlight Watched Threads On Latest Updates Page
+- Highlight Unignore And Unwatch Buttons
+- Highlight Watched Threads On Latest Updates Page
+
 
 ## Installation
 
