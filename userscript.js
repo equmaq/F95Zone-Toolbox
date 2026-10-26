@@ -5,7 +5,7 @@
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @namespace    https://github.com/equmaq/F95Zone-Toolbox
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
-// @version      1.4.3
+// @version      1.4.4
 // @license      GPL-3.0
 // @match        https://f95zone.to/*
 // @grant        GM_getValue
@@ -113,15 +113,25 @@
         }
 
         const submittedForms = new WeakSet();
+        const pendingForms = new WeakSet();
 
         const submitForms = () => {
           document.querySelectorAll('form.f95dl-box').forEach(form => {
-            if (submittedForms.has(form)) {
+            if (submittedForms.has(form) || pendingForms.has(form)) {
               return;
             }
 
-            submittedForms.add(form);
-            form.submit();
+            pendingForms.add(form);
+
+            const delay = document.querySelector(
+              '.blockMessage.blockMessage--error.blockMessage--iconic'
+            ) ? 3000 : 0;
+
+            window.setTimeout(() => {
+              pendingForms.delete(form);
+              submittedForms.add(form);
+              form.submit();
+            }, delay);
           });
         };
 
