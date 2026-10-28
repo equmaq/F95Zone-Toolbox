@@ -5,7 +5,7 @@
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @namespace    https://github.com/equmaq/F95Zone-Toolbox
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
-// @version      1.4.4
+// @version      1.4.5
 // @license      GPL-3.0
 // @match        https://f95zone.to/*
 // @grant        GM_getValue
@@ -125,7 +125,7 @@
 
             const delay = document.querySelector(
               '.blockMessage.blockMessage--error.blockMessage--iconic'
-            ) ? 3000 : 0;
+            ) ? 3000 : 500;
 
             window.setTimeout(() => {
               pendingForms.delete(form);
