@@ -125,7 +125,7 @@
 
             const delay = document.querySelector(
               '.blockMessage.blockMessage--error.blockMessage--iconic'
-            ) ? 3000 : 500;
+            ) ? 3000 : 2300;
 
             window.setTimeout(() => {
               pendingForms.delete(form);
