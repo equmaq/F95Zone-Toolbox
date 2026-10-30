@@ -1,98 +1,95 @@
-# F95Zone-Toolbox
+# F95Zone Toolbox
 
-A collection of js-modules for F95Zone that can be individually toggled by the user.
+> A small, sharp userscript for making F95Zone less tedious.
 
-Current function modules:
-- Instant Ignore Button
-- +1 Reply Blocker
-- Masked Link Skipper
+F95Zone Toolbox bundles independent quality-of-life modules into one configurable userscript. Enable only what you want; settings persist through the userscript manager and changes take effect after reload.
 
-Current Style Modules:
-- Highlight Unignore And Unwatch Buttons
-- Highlight Watched Threads On Latest Updates Page
+## What It Does
 
+| Module | Purpose |
+| --- | --- |
+| **+1 Blocker** | Removes replies containing only a number, such as `+1` or `42`. |
+| **Instant Ignore** | Ignores a thread directly and returns to that thread instead of opening the confirmation flow. |
+| **Masked Link Skipper** | Automatically submits F95Zone download continuation forms. |
+| **Button Highlights** | Makes `Unignore thread` and `Unwatch` controls stand out. |
+| **Watched Thread Highlights** | Emphasizes watched threads on the latest updates page. |
 
-## Installation
+Every module is disabled by default and can be toggled from the **F95Zone Toolbox** configuration dialog.
 
-https://sleazyfork.org/en/scripts/590793-f95zone-toolbox
+## Install
 
----
+Install the generated userscript through your preferred userscript manager:
 
-## Technical Details
+- [Install from Sleazy Fork](https://sleazyfork.org/en/scripts/590793-f95zone-toolbox)
+- Or build `dist/f95zone-toolbox.user.js` locally and import it manually.
 
-The userscript is split into independent modules. Each module has a checkbox in
-the Toolbox configuration dialog and is disabled by default. The selected
-settings are saved and applied after the page reloads.
+The script matches `https://f95zone.to/*` and supports Tampermonkey, Violentmonkey, and Greasemonkey-compatible managers.
 
-### Function Modules
+## Development
 
-#### Instant Ignore Button
+```bash
+npm install
+npm run build
+```
 
-This module watches for clicks on F95Zone's `Ignore thread` link. Instead of
-allowing the normal confirmation page to open, it:
+The production userscript is written to `dist/`.
 
-1. Prevents the link's normal action.
-2. Reads the thread ID and content type from the link URL.
-3. Reads the CSRF token from the page's `data-csrf` attribute.
-4. Builds and submits a hidden `POST` form to `/misc/tic-ignore`.
+For iterative development:
 
-The form marks the action as confirmed and redirects back to the ignored
-thread. The click handler is attached to the document, so it also works for a
-button inserted after the initial page load.
+```bash
+npm run watch
+```
 
-#### +1 Reply Blocker
+BundleMonkey performs the bundling. The build wrapper also handles the workspace path safely and generates the module registry and dialog assets automatically.
 
-On thread pages, this module looks through `.message` elements and checks the
-text inside each post's `.bbWrapper` element. Posts containing only a number,
-optionally preceded by `+` or `﹢`, are removed from the page. For example,
-`+1` and `42` match, while normal sentences do not.
+## Project Shape
 
-It performs one scan immediately and then uses a `MutationObserver` to scan
-again when new posts are added during dynamic page navigation.
+```text
+src/f95zone-toolbox/
+├── index.user.js                 # runtime, settings, and dialog coordinator
+├── dialog.html                   # dialog markup
+├── dialog.css                    # dialog styling
+└── modules/
+    ├── plus-one-blocker.js
+    ├── instant-ignore.js
+    ├── masked-link-skipper.js
+    ├── highlight-buttons.js
+    └── highlight-watched-threads.js
+```
 
-#### Masked Link Skipper
+## Add A Module
 
-This module is intended for download pages (`/dl/`) and finds forms with the
-`.f95dl-box` class. These forms represent F95Zone's intermediate "continue to"
-step. Each form is submitted automatically after a short delay, removing the
-need to press the button manually.
+Create one file in `src/f95zone-toolbox/modules/` and export a module object:
 
-The normal delay is 2.3 seconds. If the page contains F95Zone's error message,
-the delay is increased to 3 seconds.
+```js
+export default {
+  key: 'myModuleEnabled',
+  type: 'function', // 'function' or 'style'
+  title: 'My Module',
+  description: 'What this module does.',
+  enabledByDefault: false,
+  run({ document, window, location, isThreadPage, isDownloadPage }) {
+    // Module behavior
+  },
+};
+```
 
-### Style Modules
+That is all. The build automatically discovers every `.js` file in the modules folder, adds it to the toolbox dialog, persists its setting, and runs it when enabled.
 
-#### Highlight Unignore And Unwatch Buttons
+Use the supplied context to keep page checks local to the module. For example, return immediately when `isThreadPage` or `isDownloadPage` does not apply.
 
-This module checks links matching `a.tic-button` and `a.button--link`. Links
-whose text is exactly `Unignore thread` or `Unwatch` receive a translucent red
-background, a red border, and a red left border.
+## Runtime Notes
 
-The styling runs once immediately and is repeated when the page changes. The
-updates are debounced with a zero-millisecond timeout so several DOM changes
-can be handled together.
+- Settings use `GM_getValue`/`GM_setValue` or modern `GM.getValue`/`GM.setValue` APIs.
+- `localStorage` is used as a fallback when no GM storage API is available.
+- The userscript menu contains **F95Zone Toolbox: Open config**.
+- The configuration dialog opens automatically on first install and after a version change.
 
-#### Highlight Watched Threads On Latest Updates Page
+## License
 
-This module finds watched-thread icons (`.fa-eye` and
-`.watch-icon`) and makes them easier to see by setting their color, opacity,
-position, and size. It also adds a red inset overlay to the thumbnail
-(`.resource-tile_thumb`) containing a watched icon.
+[GPL-3.0](LICENSE)
 
-### Shared Runtime
+## AI Disclosure
 
-At startup the script waits for the document to be ready, loads each module's
-saved enabled/disabled value, and runs the enabled modules with the current
-page context. Page-specific modules exit immediately when their URL does not
-match their supported page type.
-
-Settings use the userscript manager's `GM_getValue`/`GM_setValue` APIs (or the
-modern `GM.getValue`/`GM.setValue` APIs). If neither API is available, the
-script falls back to `localStorage`. The userscript manager menu contains
-`F95Zone Toolbox: Open config`, which opens the settings dialog again. The
-dialog also appears on first install and once after a new script version is
-detected.
-
-## AI usage disclosure
-
-- AI powered IntelliSense/inline suggestions were occasionally used (GitHub Copilot)
+GitHub Copilot was occasionally used for IntelliSense and inline suggestions during development.
+Migration to bundlemonkey mostly done by AI.

@@ -1,0 +1,12 @@
+{
+  "name": "f95zone-toolbox",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/run-bundlemonkey.js",
+    "watch": "node scripts/run-bundlemonkey.js --watch"
+  },
+  "devDependencies": {
+    "bundlemonkey": "^0.7.6"
+  }
+}
