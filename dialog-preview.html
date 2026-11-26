@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modular Userscript Dialog Preview</title>
+  <style>
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: #17191c;
+    }
+  </style>
+</head>
+<body>
+  <dialog id="modular-userscript-dialog" class="modular-userscript-dialog"></dialog>
+
+  <script type="module">
+    const sourceRoot = './src/modular-userscript';
+    const moduleRoot = `${sourceRoot}/modules/`;
+    const dialog = document.querySelector('#modular-userscript-dialog');
+
+    async function loadText(path) {
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
+      return response.text();
+    }
+
+    async function findModulePaths() {
+      const response = await fetch(moduleRoot);
+      if (!response.ok) throw new Error(`Could not list ${moduleRoot}: ${response.status}`);
+      const directoryHtml = await response.text();
+      const directory = new DOMParser().parseFromString(directoryHtml, 'text/html');
+      return [...directory.querySelectorAll('a[href]')]
+        .map(link => link.getAttribute('title') || link.getAttribute('href').split('/').pop().replace(/\.preview$/, ''))
+        .filter(filename => filename && filename.endsWith('.js'))
+        .sort()
+        .map(filename => new URL(filename, new URL(moduleRoot, window.location.href)).href);
+    }
+
+    async function loadModules() {
+      const modulePaths = await findModulePaths();
+      return Promise.all(modulePaths.map(async path => {
+        const source = await loadText(path);
+        const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
+        try {
+          return (await import(moduleUrl)).default;
+        } finally {
+          URL.revokeObjectURL(moduleUrl);
+        }
+      }));
+    }
+
+    function createSections(modules) {
+      return ['function', 'style'].map(type => `
+        <section class="modular-userscript-section">
+          <h3>${type} modules</h3>
+          ${modules.filter(module => module.type === type).map(module => `
+            <label class="modular-userscript-module ">
+              <input type="checkbox" name="${module.key}" ${module.enabledByDefault ? 'checked' : ''}>
+              <i aria-hidden="true"></i>
+              <span class="modular-userscript-module-copy">
+                <strong>${module.title}</strong>
+                <span>${module.description}</span>
+              </span>
+            </label>
+          `).join('')}
+        </section>
+      `).join('');
+    }
+
+    async function render() {
+      const [dialogHtml, dialogCss, modules] = await Promise.all([
+        loadText(`${sourceRoot}/dialog.html`),
+        loadText(`${sourceRoot}/dialog.css`),
+        loadModules(),
+      ]);
+
+      const style = document.createElement('style');
+      style.textContent = dialogCss;
+      document.head.append(style);
+
+      dialog.innerHTML = dialogHtml
+        .replace('{{INTRO}}', 'Welcome to Modular Userscript!')
+        .replace('{{SECTIONS}}', createSections(modules));
+      dialog.addEventListener('close', () => {
+        if (dialog.returnValue === 'apply') render();
+      });
+      dialog.showModal();
+    }
+
+    try {
+      await render();
+    } catch (error) {
+      dialog.innerHTML = `<p style="padding: 1rem; color: #ec5555">${error.message}</p>`;
+      dialog.showModal();
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

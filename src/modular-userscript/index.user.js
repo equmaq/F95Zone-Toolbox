@@ -2,9 +2,12 @@ import { defineUserScript } from 'bundlemonkey';
 import modules from './modules/index.js';
 import { dialogHtml, dialogCss } from './dialog-assets.js';
 
-const VERSION = '2.0.0';
+
+const SCRIPT_NAME = 'F95Zone-Toolbox';
+const VERSION = '3.0.0';
+const STORAGE_PREFIX = 'f95zone-toolbox';
 const STORAGE_KEYS = {
-  lastSeenVersion: 'f95zone-toolbox:last-seen-version',
+  lastSeenVersion: `${STORAGE_PREFIX}:last-seen-version`,
 };
 
 const storage = {
@@ -44,30 +47,30 @@ function getContext() {
 
 async function loadModuleState() {
   return Object.fromEntries(await Promise.all(modules.map(async module => {
-    const key = `f95zone-toolbox:${module.key}`;
+    const key = `${STORAGE_PREFIX}:${module.key}`;
     return [module.key, Boolean(await storage.get(key, module.enabledByDefault))];
   })));
 }
 
 function createDialog(state) {
-  const existing = document.getElementById('f95zone-toolbox-dialog');
+  const existing = document.getElementById('modular-userscript-dialog');
   if (existing) return existing;
 
   const dialog = document.createElement('dialog');
-  dialog.id = 'f95zone-toolbox-dialog';
-  dialog.className = 'f95-toolbox-dialog';
+  dialog.id = 'modular-userscript-dialog';
+  dialog.className = 'modular-userscript-dialog';
   const style = document.createElement('style');
   style.textContent = dialogCss;
   document.head.append(style);
 
   const sections = ['function', 'style'].map(type => `
-    <section class="f95-toolbox-section">
+    <section class="modular-userscript-section">
       <h3>${type} modules</h3>
       ${modules.filter(module => module.type === type).map(module => `
-        <label class="f95zone-toolbox-module iconic iconic--checkbox">
+        <label class="modular-userscript-module">
           <input type="checkbox" name="${module.key}" ${state.values[module.key] ? 'checked' : ''}>
           <i aria-hidden="true"></i>
-          <span class="iconic-label f95zone-toolbox-module-copy">
+          <span class="modular-userscript-module-copy">
             <strong>${module.title}</strong>
             <span>${module.description}</span>
           </span>
@@ -80,7 +83,7 @@ function createDialog(state) {
   if (state.mode === 'update') {
     intro = `New Version: ${VERSION}!`;
   } else if (state.mode === 'install') {
-    intro = 'Welcome to F95Zone Toolbox!';
+    intro = `Welcome to ${SCRIPT_NAME}!`;
   }
   dialog.innerHTML = dialogHtml
     .replace('{{INTRO}}', intro)
@@ -90,7 +93,7 @@ function createDialog(state) {
     await Promise.all(modules.map(async module => {
       const enabled = dialog.querySelector(`[name="${module.key}"]`).checked;
       state.values[module.key] = enabled;
-      await storage.set(`f95zone-toolbox:${module.key}`, enabled);
+      await storage.set(`${STORAGE_PREFIX}:${module.key}`, enabled);
     }));
     await storage.set(STORAGE_KEYS.lastSeenVersion, VERSION);
     location.reload();
@@ -122,24 +125,24 @@ async function main() {
   } else if (typeof GM !== 'undefined' && typeof GM.registerMenuCommand === 'function') {
     register = GM.registerMenuCommand.bind(GM);
   }
-  register?.('F95Zone Toolbox: Open config', () => void openDialog(true));
+  register?.(`${SCRIPT_NAME}: Open config`, () => void openDialog(true));
   await openDialog();
   await storage.set(STORAGE_KEYS.lastSeenVersion, VERSION);
 }
 
 export default defineUserScript({
-  name: 'F95Zone Toolbox',
-  namespace: 'https://github.com/equmaq/F95Zone-Toolbox',
+  name: SCRIPT_NAME,
+  author: 'equmaq',
   version: VERSION,
   description: 'A collection of JS modules for F95Zone that can be individually toggled by the user.',
-  author: 'equmaq',
+  namespace: 'https://example.com/F95Zone-Toolbox',
+  match: ['https://f95zone.to/*'],
   icon: 'https://www.google.com/s2/favicons?domain=f95zone.to',
   homepage: 'https://github.com/equmaq/F95Zone-Toolbox',
   supportURL: 'https://github.com/equmaq/F95Zone-Toolbox/issues',
-  match: ['https://f95zone.to/*'],
   runAt: 'document-end',
   grant: ['GM_getValue', 'GM_setValue', 'GM_registerMenuCommand', 'GM.getValue', 'GM.setValue', 'GM.registerMenuCommand'],
-  updateURL: 'https://update.sleazyfork.org/scripts/590793/F95Zone%20Toolbox.user.js',
   downloadURL: 'https://update.sleazyfork.org/scripts/590793/F95Zone%20Toolbox.user.js',
+  updateURL: 'https://update.sleazyfork.org/scripts/590793/F95Zone%20Toolbox.user.js',
   main: () => main(),
 });

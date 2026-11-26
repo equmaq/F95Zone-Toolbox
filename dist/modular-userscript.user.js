@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         F95Zone Toolbox
-// @namespace    https://github.com/equmaq/F95Zone-Toolbox
-// @version      2.0.0
+// @name         F95Zone-Toolbox
+// @namespace    https://example.com/F95Zone-Toolbox
+// @version      3.0.0
 // @description  A collection of JS modules for F95Zone that can be individually toggled by the user.
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @grant        GM_getValue
@@ -20,7 +20,7 @@
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
 // ==/UserScript==
 
-// src/f95zone-toolbox/modules/highlight-buttons.js
+// src/modular-userscript/modules/highlight-buttons.js
 var highlight_buttons_default = {
   key: "styleUnignoreButton",
   type: "style",
@@ -44,7 +44,7 @@ var highlight_buttons_default = {
   }
 };
 
-// src/f95zone-toolbox/modules/highlight-watched-threads.js
+// src/modular-userscript/modules/highlight-watched-threads.js
 var highlight_watched_threads_default = {
   key: "styleWatchIcons",
   type: "style",
@@ -80,7 +80,7 @@ var highlight_watched_threads_default = {
   }
 };
 
-// src/f95zone-toolbox/modules/instant-ignore.js
+// src/modular-userscript/modules/instant-ignore.js
 var instant_ignore_default = {
   key: "ignoreEnabled",
   type: "function",
@@ -119,7 +119,7 @@ var instant_ignore_default = {
   }
 };
 
-// src/f95zone-toolbox/modules/masked-link-skipper.js
+// src/modular-userscript/modules/masked-link-skipper.js
 var masked_link_skipper_default = {
   key: "maskedLinkSkipperEnabled",
   type: "function",
@@ -145,7 +145,7 @@ var masked_link_skipper_default = {
   }
 };
 
-// src/f95zone-toolbox/modules/plus-one-blocker.js
+// src/modular-userscript/modules/plus-one-blocker.js
 var plus_one_blocker_default = {
   key: "plusOneEnabled",
   type: "function",
@@ -164,7 +164,7 @@ var plus_one_blocker_default = {
   }
 };
 
-// src/f95zone-toolbox/modules/index.js
+// src/modular-userscript/modules/index.js
 var modules_default = [
   highlight_buttons_default,
   highlight_watched_threads_default,
@@ -173,14 +173,16 @@ var modules_default = [
   plus_one_blocker_default
 ];
 
-// src/f95zone-toolbox/dialog-assets.js
-var dialogHtml = '<form method="dialog" class="f95-toolbox">\n  <div class="f95-toolbox-body">\n    <header class="f95-toolbox-header">\n      <p class="f95-toolbox-intro">{{INTRO}}</p>\n      <h2>F95Zone Toolbox</h2>\n      <p>Choose which modules should be active. Changes are saved immediately and applied upon reload.</p>\n    </header>\n    {{SECTIONS}}\n  </div>\n  <footer class="f95-toolbox-footer">\n    <small>Open this menu again from the userscript manager menu.</small>\n    <button type="submit" value="apply" class="button--primary button">Apply</button>\n  </footer>\n</form>\n';
-var dialogCss = ".f95-toolbox-dialog {\n  max-width: min(92vw, 800px);\n  width: fit-content;\n  border: 0;\n  border-radius: 7px;\n  padding: 0;\n  overflow: hidden;\n  color: #e5eefc;\n  background: #242629;\n  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);\n}\n\n.f95-toolbox-dialog::backdrop {\n  background: rgba(8, 10, 16, .72);\n  backdrop-filter: blur(6px);\n}\n\n.f95-toolbox {\n  font: 14px/1.45 Arial, sans-serif;\n  color: #e8edf5;\n}\n\n.f95-toolbox-body {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 14px;\n  padding: 18px;\n}\n\n.f95-toolbox-header {\n  grid-column: 1 / -1;\n}\n\n.f95-toolbox h2 {\n  margin: 0 0 4px;\n  color: #ec5555;\n}\n\n.f95-toolbox p {\n  margin: 4px 0;\n}\n\n.f95-toolbox-intro {\n  color: #f0c76b;\n  text-transform: uppercase;\n  font-size: 12px;\n  font-weight: bold;\n}\n\n.f95-toolbox-section {\n  display: grid;\n  gap: 10px;\n  align-content: start;\n}\n\n.f95-toolbox-section h3 {\n  margin: 0;\n  color: #b8c1d1;\n  font-size: 12px;\n  text-transform: uppercase;\n}\n\n.f95-toolbox-module {\n  display: flex;\n  gap: 10px;\n  align-items: center;\n  width: 340px;\n  padding: 12px 14px;\n  border: 1px solid rgba(255, 255, 255, .08);\n  border-radius: 8px;\n  background: rgba(255, 255, 255, .03);\n}\n\n.f95-toolbox-module span {\n  display: grid;\n  gap: 2px;\n}\n\n.f95-toolbox-module small,\n.f95-toolbox-footer small {\n  color: #aab2c1;\n}\n\n.f95-toolbox-footer {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12px 16px;\n  background: #37383a;\n}\n\n@media (max-width: 860px) {\n  .f95-toolbox-body {\n    grid-template-columns: 1fr;\n  }\n\n  .f95-toolbox-module {\n    width: auto;\n  }\n}\n";
+// src/modular-userscript/dialog-assets.js
+var dialogHtml = '<form method="dialog" class="modular-userscript">\n  <div class="modular-userscript-body">\n    <header class="modular-userscript-header">\n      <p class="modular-userscript-intro">{{INTRO}}</p>\n      <h2>F95Zone Toolbox</h2>\n      <p>Choose which modules should be active. Changes are saved immediately and applied upon reload.</p>\n    </header>\n    {{SECTIONS}}\n  </div>\n  <footer class="modular-userscript-footer">\n    <small>Open this menu again from the userscript manager menu.</small>\n    <button type="submit" value="apply" class="button">Apply</button>\n  </footer>\n</form>\n';
+var dialogCss = ".modular-userscript-dialog {\n  --dialog-background: #25262a;\n  --dialog-border: #505459;\n  --dialog-text: #ffffff;\n  --dialog-muted: #8c939b;\n  --dialog-accent: #ed5456;\n  --dialog-surface: #37383a;\n  max-width: min(92vw, 800px);\n  width: fit-content;\n  border: 1px solid var(--dialog-border);\n  border-radius: 7px;\n  padding: 0;\n  overflow: hidden;\n  color: var(--dialog-text);\n  background: var(--dialog-background);\n  box-shadow: 0 16px 40px rgba(31, 35, 40, .18);\n}\n\n.modular-userscript-dialog::backdrop {\n  background: rgba(31, 35, 40, .32);\n}\n\n.modular-userscript {\n  font: 14px/1.45 system-ui, sans-serif;\n  color: var(--dialog-text);\n}\n\n.modular-userscript-body {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 14px;\n  padding: 18px;\n}\n\n.modular-userscript-header {\n  grid-column: 1 / -1;\n}\n\n.modular-userscript h2 {\n  margin: 0 0 4px;\n  color: var(--dialog-text);\n}\n\n.modular-userscript p {\n  margin: 4px 0;\n}\n\n.modular-userscript-intro {\n  color: var(--dialog-accent);\n  text-transform: uppercase;\n  font-size: 12px;\n  font-weight: bold;\n}\n\n.modular-userscript-section {\n  display: grid;\n  gap: 10px;\n  align-content: start;\n}\n\n.modular-userscript-section h3 {\n  margin: 0;\n  color: var(--dialog-muted);\n  font-size: 12px;\n  text-transform: uppercase;\n}\n\n.modular-userscript-module {\n  display: flex;\n  gap: 10px;\n  align-items: center;\n  width: 340px;\n  padding: 12px 14px;\n  border: 1px solid var(--dialog-border);\n  border-radius: 8px;\n  background: var(--dialog-surface);\n}\n\n.modular-userscript-module span {\n  display: grid;\n  gap: 2px;\n}\n\n.modular-userscript-module small,\n.modular-userscript-footer small {\n  color: var(--dialog-muted);\n}\n\n.modular-userscript-footer {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12px 16px;\n  border-top: 1px solid var(--dialog-border);\n  background: var(--dialog-surface);\n}\n\n.modular-userscript button {\n  border: 1px solid var(--dialog-accent);\n  border-radius: 6px;\n  padding: 0px 12px;\n  color: #ffffff;\n  background: var(--dialog-accent);\n  cursor: pointer;\n}\n\n@media (max-width: 860px) {\n  .modular-userscript-body {\n    grid-template-columns: 1fr;\n  }\n\n  .modular-userscript-module {\n    width: auto;\n  }\n}\n\n";
 
-// src/f95zone-toolbox/index.user.js
-var VERSION = "2.0.0";
+// src/modular-userscript/index.user.js
+var SCRIPT_NAME = "F95Zone-Toolbox";
+var VERSION = "3.0.0";
+var STORAGE_PREFIX = "f95zone-toolbox";
 var STORAGE_KEYS = {
-  lastSeenVersion: "f95zone-toolbox:last-seen-version"
+  lastSeenVersion: `${STORAGE_PREFIX}:last-seen-version`
 };
 var storage = {
   async get(key, fallback) {
@@ -224,28 +226,28 @@ function getContext() {
 }
 async function loadModuleState() {
   return Object.fromEntries(await Promise.all(modules_default.map(async (module) => {
-    const key = `f95zone-toolbox:${module.key}`;
+    const key = `${STORAGE_PREFIX}:${module.key}`;
     return [module.key, Boolean(await storage.get(key, module.enabledByDefault))];
   })));
 }
 function createDialog(state) {
-  const existing = document.getElementById("f95zone-toolbox-dialog");
+  const existing = document.getElementById("modular-userscript-dialog");
   if (existing)
     return existing;
   const dialog = document.createElement("dialog");
-  dialog.id = "f95zone-toolbox-dialog";
-  dialog.className = "f95-toolbox-dialog";
+  dialog.id = "modular-userscript-dialog";
+  dialog.className = "modular-userscript-dialog";
   const style = document.createElement("style");
   style.textContent = dialogCss;
   document.head.append(style);
   const sections = ["function", "style"].map((type) => `
-    <section class="f95-toolbox-section">
+    <section class="modular-userscript-section">
       <h3>${type} modules</h3>
       ${modules_default.filter((module) => module.type === type).map((module) => `
-        <label class="f95zone-toolbox-module iconic iconic--checkbox">
+        <label class="modular-userscript-module">
           <input type="checkbox" name="${module.key}" ${state.values[module.key] ? "checked" : ""}>
           <i aria-hidden="true"></i>
-          <span class="iconic-label f95zone-toolbox-module-copy">
+          <span class="modular-userscript-module-copy">
             <strong>${module.title}</strong>
             <span>${module.description}</span>
           </span>
@@ -257,7 +259,7 @@ function createDialog(state) {
   if (state.mode === "update") {
     intro = `New Version: ${VERSION}!`;
   } else if (state.mode === "install") {
-    intro = "Welcome to F95Zone Toolbox!";
+    intro = `Welcome to ${SCRIPT_NAME}!`;
   }
   dialog.innerHTML = dialogHtml.replace("{{INTRO}}", intro).replace("{{SECTIONS}}", sections);
   dialog.addEventListener("close", async () => {
@@ -266,7 +268,7 @@ function createDialog(state) {
     await Promise.all(modules_default.map(async (module) => {
       const enabled = dialog.querySelector(`[name="${module.key}"]`).checked;
       state.values[module.key] = enabled;
-      await storage.set(`f95zone-toolbox:${module.key}`, enabled);
+      await storage.set(`${STORAGE_PREFIX}:${module.key}`, enabled);
     }));
     await storage.set(STORAGE_KEYS.lastSeenVersion, VERSION);
     location.reload();
@@ -297,7 +299,7 @@ async function main() {
   } else if (typeof GM !== "undefined" && typeof GM.registerMenuCommand === "function") {
     register = GM.registerMenuCommand.bind(GM);
   }
-  register?.("F95Zone Toolbox: Open config", () => void openDialog(true));
+  register?.(`${SCRIPT_NAME}: Open config`, () => void openDialog(true));
   await openDialog();
   await storage.set(STORAGE_KEYS.lastSeenVersion, VERSION);
 }
