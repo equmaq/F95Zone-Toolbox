@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         F95Zone-Toolbox
 // @namespace    https://example.com/F95Zone-Toolbox
-// @version      3.0.0
+// @version      3.1.0
 // @description  A collection of JS modules for F95Zone that can be individually toggled by the user.
 // @icon         https://www.google.com/s2/favicons?domain=f95zone.to
 // @grant        GM_getValue
@@ -198,7 +198,7 @@ var dialogCss = ".modular-userscript-dialog {\n  --dialog-background: #25262a;\n
 
 // src/modular-userscript/index.user.js
 var SCRIPT_NAME = "F95Zone-Toolbox";
-var VERSION = "3.0.0";
+var VERSION = "3.1.0";
 var STORAGE_PREFIX = "f95zone-toolbox";
 var STORAGE_KEYS = {
   lastSeenVersion: `${STORAGE_PREFIX}:last-seen-version`
