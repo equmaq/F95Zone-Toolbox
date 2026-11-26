@@ -20,6 +20,18 @@
 // @supportURL   https://github.com/equmaq/F95Zone-Toolbox/issues
 // ==/UserScript==
 
+// src/modular-userscript/modules/donor-mode.js
+var donor_mode_default = {
+  key: "donorMode",
+  type: "function",
+  title: "Donor Mode",
+  description: `Makes other modules take advatage of the donor status of the user.<br>Only enable this if you are a donor!`,
+  enabledByDefault: false,
+  run({ document: document2 }) {
+    globalThis.isDonor = true;
+  }
+};
+
 // src/modular-userscript/modules/highlight-buttons.js
 var highlight_buttons_default = {
   key: "styleUnignoreButton",
@@ -127,13 +139,19 @@ var masked_link_skipper_default = {
   description: "Automatically presses the continue button when downloading a game.",
   enabledByDefault: false,
   run({ document: document2, isDownloadPage }) {
+    let delay1 = 3e3;
+    let delay2 = 2300;
+    if (globalThis.isDonor) {
+      delay1 = 1500;
+      delay2 = 500;
+    }
     if (!isDownloadPage) return;
     const submitted = /* @__PURE__ */ new WeakSet();
     const pending = /* @__PURE__ */ new WeakSet();
     const submitForms = () => document2.querySelectorAll("form.f95dl-box").forEach((form) => {
       if (submitted.has(form) || pending.has(form)) return;
       pending.add(form);
-      const delay = document2.querySelector(".blockMessage.blockMessage--error.blockMessage--iconic") ? 3e3 : 2300;
+      const delay = document2.querySelector(".blockMessage.blockMessage--error.blockMessage--iconic") ? delay1 : delay2;
       window.setTimeout(() => {
         pending.delete(form);
         submitted.add(form);
@@ -166,6 +184,7 @@ var plus_one_blocker_default = {
 
 // src/modular-userscript/modules/index.js
 var modules_default = [
+  donor_mode_default,
   highlight_buttons_default,
   highlight_watched_threads_default,
   instant_ignore_default,

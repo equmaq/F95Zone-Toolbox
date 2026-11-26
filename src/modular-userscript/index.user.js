@@ -4,7 +4,7 @@ import { dialogHtml, dialogCss } from './dialog-assets.js';
 
 
 const SCRIPT_NAME = 'F95Zone-Toolbox';
-const VERSION = '3.0.0';
+const VERSION = '3.1.0';
 const STORAGE_PREFIX = 'f95zone-toolbox';
 const STORAGE_KEYS = {
   lastSeenVersion: `${STORAGE_PREFIX}:last-seen-version`,
